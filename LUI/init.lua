@@ -37,7 +37,13 @@ function LUI:Setup(fdoScale,fdoSizeScale,fgameWidth,fgameHeight)--do scale only 
   self.Settings.canRun = true
 end
 
+function LUID:Enable()
+  self.Enabled = true
+end
 
+function LUID:Disable()
+  self.Enabled = false
+end
 
 function LUID:isClicked(Num)--Num is the mouse button
   if Num == nil then Num = 1 end
@@ -70,6 +76,7 @@ function LUID:newLabel(X,Y,Wid,Hei,Mis)
 
   return self.Contents[#self.Contents]
 end
+
 
 function LUID:newButton(X,Y,Wid,Hei,Mis)
   if Mis == nil then Mis = {} end
@@ -142,6 +149,9 @@ function LUID:newFrame(xPos,yPos,Wid,Hei,Mis)
   newTextBox=LUID.newTextBox,
   newButton = LUID.newButton,
   newFrame=LUID.newFrame,
+  newScrollableFrame=LUID.newScrollableFrame,
+  Enable=LUID.Enable,
+  Disable=LUID.Disable,
 
   Stencil=function()
     love.graphics.rectangle("fill",xPos,yPos,Wid,Hei,Mis.RX,Mis.RY,Mis.Segments)
@@ -174,6 +184,8 @@ function LUID:newScrollableFrame(xPos,yPos,Wid,Hei,Mis)
   newTextBox=LUID.newTextBox,
   newButton = LUID.newButton,
   newFrame=LUID.newFrame,
+  Enable=LUID.Enable,
+  Disable = LUID.Disable,
 
   Stencil=function()
     love.graphics.rectangle("fill",xPos,yPos,Wid,Hei,Mis.RX,Mis.RY,Mis.Segments)
