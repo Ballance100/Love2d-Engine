@@ -1,2 +1,6 @@
 # Love2d-Engine
-An engine desgined to create Love2D games. Built off of the love2D framework
+An open source, not for profit engine desgined to create Love2D games. Built off of the love2D framework
+
+Current Development Stage : Unusable
+
+If your looking to help devolop then contact me
