@@ -346,163 +346,165 @@ function LUI:Draw()
   --Frames
   function drawFrames(Index,Frame)
     PR,PG,PB,PA = love.graphics.getColor()
+    if Frame.Enabled == true then
   
-
-      if Frame.BGColour ~= nil then
-        PR,PG,PB,PA = love.graphics.getColor()--Previous Blue,Red,Green and alpha
-        love.graphics.setColor(Frame.BGColour)
-      end
-
-      if Frame.BGImage ~= nil then
-        love.graphics.draw(Frame.BGImage,Frame.X,Frame.Y)
-      else love.graphics.rectangle("fill",Frame.X*scaleX,Frame.Y*scaleY,Frame.Wid*sizeScaleX,Frame.Hei*sizeScaleY,Frame.RX,Frame.RY,Frame.Segments) end
-      if Frame.BGColour ~= nil then love.graphics.setColor(PR,PG,PB,PA) end
-
-
-      --UI elements
-        for k,y in ipairs(Frame.Contents) do
-
-          local PR,PG,PB,PA = love.graphics.getColor()--Previous Blue,Red,Green and alpha
-  
-
-          if Frame.frameClipping == true then
-            love.graphics.stencil(Frame.Stencil,"replace",1)
-            love.graphics.setStencilTest("greater",0)
-          end
-          --Label
-          if y.Type == "Label" then
-
-            if y.BGColour ~= nil then
-              PR,PG,PB,PA = love.graphics.getColor()--Previous Blue,Red,Green and alpha
-              love.graphics.setColor(y.BGColour)
-            end
-
-            if y.BGImage ~= nil then
-              love.graphics.draw(y.BGImage,y.X+Frame.scrollwheelX,y.Y+Frame.scrollwheelY,0,
-              y.Wid/y.BGImage:getWidth(),y.Hei/y.BGImage:getHeight())
-            else
-            love.graphics.rectangle(y.Fill,y.X+Frame.scrollwheelX*sizeScaleX,y.Y+Frame.scrollwheelY*sizeScaleY,y.Wid*sizeScaleX,y.Hei*sizeScaleY,y.RX,y.RY,y.Segments)
-            end
-            if y.BGColour ~= nil then love.graphics.setColor(PR,PG,PB,PA) end
-
-          --TextBox
-          elseif y.Type == "Button" then
-            if y.BGColour ~= nil then
-              PR,PG,PB,PA = love.graphics.getColor()--Previous Blue,Red,Green and alpha
-              love.graphics.setColor(y.BGColour)
-            end
-
-            if y.BGImage ~= nil then
-              love.graphics.draw(y.BGImage,y.X,y.Y,0,y.Wid/y.BGImage:getWidth(),y.Hei/y.BGImage:getHeight())
-            else
-            love.graphics.rectangle(y.Fill,y.X,y.Y,y.Wid,y.Hei,y.RX,y.RY,y.Segments)
-            end
-            if y.BGColour ~= nil then love.graphics.setColor(PR,PG,PB,PA) end
-
-          elseif y.Type == "textBox" then
-
-
-            --Drawing background box
-            if y.BGColour ~= nil then
-              PR,PG,PB,PA = love.graphics.getColor()--Previous Blue,Red,Green and alpha
-              love.graphics.setColor(y.BGColour)
-            end
-
-            --Still drawing background box
-            love.graphics.rectangle("line",y.X*sizeScaleX,y.Y*sizeScaleY,y.Wid*sizeScaleX,y.Font:getHeight(),y.RX,y.RY,y.Segments )
-            love.graphics.setColor(PR,PG,PB,PA)
-
-
-            --Drawing Cursor
-            local l = love.graphics.getLineWidth()
-            PR,PG,PB,PA = love.graphics.getColor()--Previous Blue,Red,Green and alpha
-            love.graphics.setColor(y.cursorColour)
-
-            if LUI.selectedTextBox == y then
-            love.graphics.setLineStyle("smooth")
-            love.graphics.setLineWidth(2.5)
-            love.graphics.line(y.X*sizeScaleX+y.CX,y.Y*sizeScaleY+y.Font:getHeight()-2,y.X*sizeScaleX+y.CX,y.Y*sizeScaleY+y.Font:getHeight()-y.CurHeight+2)
-            love.graphics.setLineWidth(l)
-            love.graphics.setColor(PR,PG,PB,PA)
-            end
-
-            
-            --Drawing Text
-            local function TextStencil()
-              love.graphics.rectangle("fill",y.X,y.Y,y.Wid,y.Hei,y.RX,y.RY,y.Segemnts)
-            end
-            love.graphics.stencil(TextStencil,"replace",1)
-            love.graphics.setStencilTest("greater",0)
-            love.graphics.setColor(y.textColour)
-
-            local Text = love.graphics.newText(y.Font,y.Text)
-            love.graphics.draw(Text,y.X*sizeScaleX,y.Y*sizeScaleY)
-
-            love.graphics.setColor(PR,PG,PB,PA)
-            love.graphics.setStencilTest()
-          end
-          if y.Font ~= nil then 
-            love.graphics.setColor(y.textColour)
-            local Text = love.graphics.newText(y.Font,y.Text)
-            love.graphics.draw(Text,y.X*sizeScaleX+y.textOffset[1]*sizeScaleX,y.Y*sizeScaleY+y.textOffset[2]*sizeScaleY,0,sizeScaleX,sizeScaleY)
-          end
+        if Frame.BGColour ~= nil then
+          PR,PG,PB,PA = love.graphics.getColor()--Previous Blue,Red,Green and alpha
+          love.graphics.setColor(Frame.BGColour)
         end
 
-
-        if Frame.Type == "scrollableFrame" then
-          local xCon = Frame.Wid/Frame.xContent
-          local yCon = Frame.Hei/Frame.yContent--percentage of frame covered divided by 100.IE 100 percent would be 1
-
-          if Frame.isHoldingYScroll==true then
-          love.graphics.setColor(Frame.scrollwheelSelectedColour)
-          elseif CurFun.IsHovering(Frame.X+Frame.Wid-Frame.scrollwheelDimensions.Wid+Frame.scrollwheelOffset[2],
-          Frame.Y+Frame.scrollwheelOffset[2]-Frame.scrollwheelY*yCon,
-          Frame.scrollwheelDimensions.Wid,
-          Frame.Hei*Frame.Hei/Frame.yContent) then
-              love.graphics.setColor(Frame.scrollwheelHoveringColour)
-            else love.graphics.setColor(Frame.scrollwheelColour)
-          end
-  
-  
-        --Right hand side Y-Axis scrollbar
-          if Frame.Hei*Frame.Hei/Frame.yContent < Frame.Hei then--Should be less than 1 not Frame.Hei
-            love.graphics.rectangle("fill",
-            Frame.X+Frame.Wid-Frame.scrollwheelDimensions.Wid+Frame.scrollwheelOffset[2],
-            Frame.Y+Frame.scrollwheelOffset[2]-Frame.scrollwheelY*yCon,
-            Frame.scrollwheelDimensions.Wid,
-            Frame.Hei*Frame.Hei/Frame.yContent,
-            Frame.SWRX,--Scroll wheel edge radius(X)
-            Frame.SWRY
-            )
-         
-          end
+        if Frame.BGImage ~= nil then
+          love.graphics.draw(Frame.BGImage,Frame.X,Frame.Y)
+        else love.graphics.rectangle("fill",Frame.X*scaleX,Frame.Y*scaleY,Frame.Wid*sizeScaleX,Frame.Hei*sizeScaleY,Frame.RX,Frame.RY,Frame.Segments) end
+        if Frame.BGColour ~= nil then love.graphics.setColor(PR,PG,PB,PA) end
 
 
-          if Frame.isHoldingXScroll==true then
-          love.graphics.setColor(Frame.scrollwheelSelectedColour)
-          elseif CurFun.IsHovering(Frame.X+Frame.scrollwheelOffset[2]-Frame.scrollwheelX*xCon,
-          Frame.Y+Frame.Hei-Frame.scrollwheelDimensions.Hei+Frame.scrollwheelOffset[2],
-          Frame.Wid*Frame.Wid/Frame.xContent,
-          Frame.scrollwheelDimensions.Hei) then
-              love.graphics.setColor(Frame.scrollwheelHoveringColour)
-            else love.graphics.setColor(Frame.scrollwheelColour)
-          end
+        --UI elements
+          for k,y in ipairs(Frame.Contents) do
+
+            local PR,PG,PB,PA = love.graphics.getColor()--Previous Blue,Red,Green and alpha
     
 
-          --Bottom X-axis scrollbar
-          love.graphics.rectangle("fill",
-          Frame.X+Frame.scrollwheelOffset[2]-Frame.scrollwheelX*xCon,
-          Frame.Y+Frame.Hei-Frame.scrollwheelDimensions.Hei+Frame.scrollwheelOffset[2],
-          Frame.Wid*Frame.Wid/Frame.xContent,
-          Frame.scrollwheelDimensions.Hei,
-          Frame.SWRX,
-          Frame.SWRY)
+            if Frame.frameClipping == true then
+              love.graphics.stencil(Frame.Stencil,"replace",1)
+              love.graphics.setStencilTest("greater",0)
+            end
+            --Label
+            if y.Type == "Label" then
 
+              if y.BGColour ~= nil then
+                PR,PG,PB,PA = love.graphics.getColor()--Previous Blue,Red,Green and alpha
+                love.graphics.setColor(y.BGColour)
+              end
+
+              if y.BGImage ~= nil then
+                love.graphics.draw(y.BGImage,y.X+Frame.scrollwheelX,y.Y+Frame.scrollwheelY,0,
+                y.Wid/y.BGImage:getWidth(),y.Hei/y.BGImage:getHeight())
+              else
+              love.graphics.rectangle(y.Fill,y.X+Frame.scrollwheelX*sizeScaleX,y.Y+Frame.scrollwheelY*sizeScaleY,y.Wid*sizeScaleX,y.Hei*sizeScaleY,y.RX,y.RY,y.Segments)
+              end
+              if y.BGColour ~= nil then love.graphics.setColor(PR,PG,PB,PA) end
+
+            --TextBox
+            elseif y.Type == "Button" then
+              if y.BGColour ~= nil then
+                PR,PG,PB,PA = love.graphics.getColor()--Previous Blue,Red,Green and alpha
+                love.graphics.setColor(y.BGColour)
+              end
+
+              if y.BGImage ~= nil then
+                love.graphics.draw(y.BGImage,y.X,y.Y,0,y.Wid/y.BGImage:getWidth(),y.Hei/y.BGImage:getHeight())
+              else
+              love.graphics.rectangle(y.Fill,y.X,y.Y,y.Wid,y.Hei,y.RX,y.RY,y.Segments)
+              end
+              if y.BGColour ~= nil then love.graphics.setColor(PR,PG,PB,PA) end
+
+            elseif y.Type == "textBox" then
+
+
+              --Drawing background box
+              if y.BGColour ~= nil then
+                PR,PG,PB,PA = love.graphics.getColor()--Previous Blue,Red,Green and alpha
+                love.graphics.setColor(y.BGColour)
+              end
+
+              --Still drawing background box
+              love.graphics.rectangle("line",y.X*sizeScaleX,y.Y*sizeScaleY,y.Wid*sizeScaleX,y.Font:getHeight(),y.RX,y.RY,y.Segments )
+              love.graphics.setColor(PR,PG,PB,PA)
+
+
+              --Drawing Cursor
+              local l = love.graphics.getLineWidth()
+              PR,PG,PB,PA = love.graphics.getColor()--Previous Blue,Red,Green and alpha
+              love.graphics.setColor(y.cursorColour)
+
+              if LUI.selectedTextBox == y then
+              love.graphics.setLineStyle("smooth")
+              love.graphics.setLineWidth(2.5)
+              love.graphics.line(y.X*sizeScaleX+y.CX,y.Y*sizeScaleY+y.Font:getHeight()-2,y.X*sizeScaleX+y.CX,y.Y*sizeScaleY+y.Font:getHeight()-y.CurHeight+2)
+              love.graphics.setLineWidth(l)
+              love.graphics.setColor(PR,PG,PB,PA)
+              end
+
+              
+              --Drawing Text
+              local function TextStencil()
+                love.graphics.rectangle("fill",y.X,y.Y,y.Wid,y.Hei,y.RX,y.RY,y.Segemnts)
+              end
+              love.graphics.stencil(TextStencil,"replace",1)
+              love.graphics.setStencilTest("greater",0)
+              love.graphics.setColor(y.textColour)
+
+              local Text = love.graphics.newText(y.Font,y.Text)
+              love.graphics.draw(Text,y.X*sizeScaleX,y.Y*sizeScaleY)
+
+              love.graphics.setColor(PR,PG,PB,PA)
+              love.graphics.setStencilTest()
+            end
+            if y.Font ~= nil then 
+              love.graphics.setColor(y.textColour)
+              local Text = love.graphics.newText(y.Font,y.Text)
+              love.graphics.draw(Text,y.X*sizeScaleX+y.textOffset[1]*sizeScaleX,y.Y*sizeScaleY+y.textOffset[2]*sizeScaleY,0,sizeScaleX,sizeScaleY)
+            end
+          end
+
+
+          if Frame.Type == "scrollableFrame" then
+            local xCon = Frame.Wid/Frame.xContent
+            local yCon = Frame.Hei/Frame.yContent--percentage of frame covered divided by 100.IE 100 percent would be 1
+
+            if Frame.isHoldingYScroll==true then
+            love.graphics.setColor(Frame.scrollwheelSelectedColour)
+            elseif CurFun.IsHovering(Frame.X+Frame.Wid-Frame.scrollwheelDimensions.Wid+Frame.scrollwheelOffset[2],
+            Frame.Y+Frame.scrollwheelOffset[2]-Frame.scrollwheelY*yCon,
+            Frame.scrollwheelDimensions.Wid,
+            Frame.Hei*Frame.Hei/Frame.yContent) then
+                love.graphics.setColor(Frame.scrollwheelHoveringColour)
+              else love.graphics.setColor(Frame.scrollwheelColour)
+            end
+    
+    
+          --Right hand side Y-Axis scrollbar
+            if Frame.Hei*Frame.Hei/Frame.yContent < Frame.Hei then--Should be less than 1 not Frame.Hei
+              love.graphics.rectangle("fill",
+              Frame.X+Frame.Wid-Frame.scrollwheelDimensions.Wid+Frame.scrollwheelOffset[2],
+              Frame.Y+Frame.scrollwheelOffset[2]-Frame.scrollwheelY*yCon,
+              Frame.scrollwheelDimensions.Wid,
+              Frame.Hei*Frame.Hei/Frame.yContent,
+              Frame.SWRX,--Scroll wheel edge radius(X)
+              Frame.SWRY
+              )
           
+            end
 
-        end
-    love.graphics.setStencilTest()
-    love.graphics.setColor(PR,PG,PB,PA)
+
+            if Frame.isHoldingXScroll==true then
+            love.graphics.setColor(Frame.scrollwheelSelectedColour)
+            elseif CurFun.IsHovering(Frame.X+Frame.scrollwheelOffset[2]-Frame.scrollwheelX*xCon,
+            Frame.Y+Frame.Hei-Frame.scrollwheelDimensions.Hei+Frame.scrollwheelOffset[2],
+            Frame.Wid*Frame.Wid/Frame.xContent,
+            Frame.scrollwheelDimensions.Hei) then
+                love.graphics.setColor(Frame.scrollwheelHoveringColour)
+              else love.graphics.setColor(Frame.scrollwheelColour)
+            end
+      
+
+            --Bottom X-axis scrollbar
+            love.graphics.rectangle("fill",
+            Frame.X+Frame.scrollwheelOffset[2]-Frame.scrollwheelX*xCon,
+            Frame.Y+Frame.Hei-Frame.scrollwheelDimensions.Hei+Frame.scrollwheelOffset[2],
+            Frame.Wid*Frame.Wid/Frame.xContent,
+            Frame.scrollwheelDimensions.Hei,
+            Frame.SWRX,
+            Frame.SWRY)
+
+            
+
+          end
+      love.graphics.setStencilTest()
+      love.graphics.setColor(PR,PG,PB,PA)
+
+    end
 
   end
 
