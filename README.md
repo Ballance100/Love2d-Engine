@@ -4,3 +4,5 @@ An open source, not for profit engine desgined to create Love2D games. Built off
 Current Development Stage : Unusable
 
 If your looking to help develop then contact me
+
+Credit:JetBrains Mono Font
