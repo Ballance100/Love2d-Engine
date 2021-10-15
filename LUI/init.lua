@@ -84,9 +84,10 @@ function LUID:newButton(X,Y,Wid,Hei,Mis)
   if Mis.textColour == nil then Mis.textColour = {1,1,1,1} end
   if Mis.Text == nil then Mis.Text = "" end
   if Mis.textAlign == nil then Mis.textAlign = "left" end
+  if Mis.textOffset == nil then Mis.textOffset = {0,0} end
 
   self.Contents[#self.Contents+1] = {Type="Button",Enabled=true,X=X+self.X,Y=Y+self.Y,Wid=Wid,Hei=Hei,
-  Text=Mis.Text, Font=Mis.Font,textAlign=Mis.textAlign,
+  Text=Mis.Text, Font=Mis.Font,textAlign=Mis.textAlign,textOffset=Mis.textOffset,
   BGColour=Mis.BGColour,BGImage=Mis.BGImage,hoveringBGImage=Mis.hoveringBGImage,clickedBGImage=Mis.clickedBGImage,
   BFClipping=Mis.frameClipping,Fill=Mis.Fill,
   RY=Mis.RX,RX=Mis.RX,Segments=Mis.Segments,
@@ -281,7 +282,7 @@ function LUI:Update(dt)
 
 
 
-          print(Frame.isHoldingXScroll)
+
         if Frame.isHoldingXScroll == true then
           if CurFun.clickedAnywhere(1) then
             local mouse_diff = prevCurPosX - curCurPosX
@@ -360,7 +361,10 @@ function LUI:Draw()
 
       --UI elements
         for k,y in ipairs(Frame.Contents) do
+
           local PR,PG,PB,PA = love.graphics.getColor()--Previous Blue,Red,Green and alpha
+  
+
           if Frame.frameClipping == true then
             love.graphics.stencil(Frame.Stencil,"replace",1)
             love.graphics.setStencilTest("greater",0)
@@ -381,11 +385,6 @@ function LUI:Draw()
             end
             if y.BGColour ~= nil then love.graphics.setColor(PR,PG,PB,PA) end
 
-            if y.Font ~= nil then 
-              love.graphics.setColor(y.textColour)
-              local Text = love.graphics.newText(y.Font,y.Text)
-              love.graphics.draw(Text,y.X*sizeScaleX+y.textOffset[1]*sizeScaleX,y.Y*sizeScaleY+y.textOffset[2]*sizeScaleY,0,sizeScaleX,sizeScaleY)
-            end
           --TextBox
           elseif y.Type == "Button" then
             if y.BGColour ~= nil then
@@ -442,6 +441,11 @@ function LUI:Draw()
             love.graphics.setColor(PR,PG,PB,PA)
             love.graphics.setStencilTest()
           end
+          if y.Font ~= nil then 
+            love.graphics.setColor(y.textColour)
+            local Text = love.graphics.newText(y.Font,y.Text)
+            love.graphics.draw(Text,y.X*sizeScaleX+y.textOffset[1]*sizeScaleX,y.Y*sizeScaleY+y.textOffset[2]*sizeScaleY,0,sizeScaleX,sizeScaleY)
+          end
         end
 
 
@@ -493,6 +497,8 @@ function LUI:Draw()
           Frame.scrollwheelDimensions.Hei,
           Frame.SWRX,
           Frame.SWRY)
+
+          
 
         end
     love.graphics.setStencilTest()

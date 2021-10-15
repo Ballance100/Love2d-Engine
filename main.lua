@@ -1,7 +1,7 @@
 
-print(3)
 
 
+Scene = "projectsManager"
 
 
 function love.load()
@@ -19,8 +19,15 @@ end
 
 
 
-function love.update()
-
+function love.update(dt)
+    if Scene == "projectsManager" then
+        for i,v in ipairs(UI.Elements.projectsList.Contents) do
+            if v:isClicked(1) then
+                print(1)
+                UI.launchProject(v.Text)
+            end
+        end
+    end
 end
 
 

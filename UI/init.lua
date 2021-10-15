@@ -7,6 +7,8 @@ function UI.load()
     UI.Elements.projectsList = UI.Elements.PMCon:newScrollableFrame(325,100,650,800,{BGColour={.3,.3,.3}})
     UI.Elements.projectsList.Contents = {}
 
+    mainFont = love.graphics.newFont("UI/JetBrains Mono.ttf",20)
+
     for i,v in ipairs(UI.Elements) do v:Disable() end
 end
 
@@ -23,7 +25,7 @@ function UI.projectManager()
     UI.Elements.projectsList:Enable()
 
     for i,v in ipairs(love.filesystem.getDirectoryItems("Projects")) do
-        UI.Elements.projectsList.Contents[i] = UI.Elements.projectsList:newButton(0,0,640,100)
+        UI.Elements.projectsList.Contents[i] = UI.Elements.projectsList:newButton(0,i*100-100,640,100,{BGColour={.5,.5,.5},Text=v,textColour = {1,1,1},Font=mainFont})
     end
 end
 
