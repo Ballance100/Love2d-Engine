@@ -17,7 +17,9 @@ end
 
 function UI.update()
     if engineState == "gameMaker" then
-        
+        if engineSettings.hiddenSettings ~= nil then UI.leftPanel:Enable() else UI.leftPanel:Disable() end
+            
+
     end
 end
 
