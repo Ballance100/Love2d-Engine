@@ -7,9 +7,12 @@ hiddenSettings={properties="leftPanel",contents="rightPanel",leftPanelWidth=150,
 
 function love.load()
     binser = require("binser")
+    suit = require("suit")
+    UI = require("UI")--UI script contains functions which LUI execute
+    Flux=require("Flux")
     engineState = "projectsManager"--The gameState but for the engine itself. list of possible states:projectsManager,gameMaker
 
-
+    love.keyboard.setKeyRepeat (true)
 
     love.window.setMode(1280,720)--Sets the resolution
 
@@ -19,11 +22,7 @@ function love.load()
 
     --Binser.deserialize(engineSettings)[1]()
     print("i",love.filesystem.getIdentity())
-    suit = require("suit")
-
-    UI = require("UI")--UI script contains functions which LUI execute
     UI.load()
-    UI.projectManager()
 
     if love.filesystem.getInfo("engineSettings.lua") ~= nil then
         settingsFile = love.filesystem.newFile("engineSettings.lua")
@@ -54,4 +53,12 @@ end
 function love.draw()
 UI.draw()
 
+end
+
+function love.textinput(t)
+    suit.textinput(t)
+end
+
+function love.keypressed(_,key)
+    suit.keypressed(key)
 end
