@@ -358,6 +358,58 @@ function LUI:Draw()
         else love.graphics.rectangle("fill",Frame.X*scaleX,Frame.Y*scaleY,Frame.Wid*sizeScaleX,Frame.Hei*sizeScaleY,Frame.RX,Frame.RY,Frame.Segments) end
         if Frame.BGColour ~= nil then love.graphics.setColor(PR,PG,PB,PA) end
 
+        if Frame.Type == "scrollableFrame" then
+          local xCon = Frame.Wid/Frame.xContent
+          local yCon = Frame.Hei/Frame.yContent--percentage of frame covered divided by 100.IE 100 percent would be 1
+
+          if Frame.isHoldingYScroll==true then
+          love.graphics.setColor(Frame.scrollwheelSelectedColour)
+          elseif CurFun.IsHovering(Frame.X+Frame.Wid-Frame.scrollwheelDimensions.Wid+Frame.scrollwheelOffset[2],
+          Frame.Y+Frame.scrollwheelOffset[2]-Frame.scrollwheelY*yCon,
+          Frame.scrollwheelDimensions.Wid,
+          Frame.Hei*Frame.Hei/Frame.yContent) then
+              love.graphics.setColor(Frame.scrollwheelHoveringColour)
+            else love.graphics.setColor(Frame.scrollwheelColour)
+          end
+  
+  
+        --Right hand side Y-Axis scrollbar
+          if Frame.Hei*Frame.Hei/Frame.yContent < Frame.Hei then--Should be less than 1 not Frame.Hei
+            love.graphics.rectangle("fill",
+            Frame.X+Frame.Wid-Frame.scrollwheelDimensions.Wid+Frame.scrollwheelOffset[2],
+            Frame.Y+Frame.scrollwheelOffset[2]-Frame.scrollwheelY*yCon,
+            Frame.scrollwheelDimensions.Wid,
+            Frame.Hei*Frame.Hei/Frame.yContent,
+            Frame.SWRX,--Scroll wheel edge radius(X)
+            Frame.SWRY
+            )
+        
+          end
+
+
+          if Frame.isHoldingXScroll==true then
+          love.graphics.setColor(Frame.scrollwheelSelectedColour)
+          elseif CurFun.IsHovering(Frame.X+Frame.scrollwheelOffset[2]-Frame.scrollwheelX*xCon,
+          Frame.Y+Frame.Hei-Frame.scrollwheelDimensions.Hei+Frame.scrollwheelOffset[2],
+          Frame.Wid*Frame.Wid/Frame.xContent,
+          Frame.scrollwheelDimensions.Hei) then
+              love.graphics.setColor(Frame.scrollwheelHoveringColour)
+            else love.graphics.setColor(Frame.scrollwheelColour)
+          end
+    
+
+          --Bottom X-axis scrollbar
+          love.graphics.rectangle("fill",
+          Frame.X+Frame.scrollwheelOffset[2]-Frame.scrollwheelX*xCon,
+          Frame.Y+Frame.Hei-Frame.scrollwheelDimensions.Hei+Frame.scrollwheelOffset[2],
+          Frame.Wid*Frame.Wid/Frame.xContent,
+          Frame.scrollwheelDimensions.Hei,
+          Frame.SWRX,
+          Frame.SWRY)
+
+          
+
+        end
 
         --UI elements
           for k,y in ipairs(Frame.Contents) do
@@ -385,7 +437,7 @@ function LUI:Draw()
               end
               if y.BGColour ~= nil then love.graphics.setColor(PR,PG,PB,PA) end
 
-            --TextBox
+
             elseif y.Type == "Button" then
               if y.BGColour ~= nil then
                 PR,PG,PB,PA = love.graphics.getColor()--Previous Blue,Red,Green and alpha
@@ -399,6 +451,8 @@ function LUI:Draw()
               end
               if y.BGColour ~= nil then love.graphics.setColor(PR,PG,PB,PA) end
 
+
+              --Text Box
             elseif y.Type == "textBox" then
 
 
@@ -449,58 +503,7 @@ function LUI:Draw()
           end
 
 
-          if Frame.Type == "scrollableFrame" then
-            local xCon = Frame.Wid/Frame.xContent
-            local yCon = Frame.Hei/Frame.yContent--percentage of frame covered divided by 100.IE 100 percent would be 1
-
-            if Frame.isHoldingYScroll==true then
-            love.graphics.setColor(Frame.scrollwheelSelectedColour)
-            elseif CurFun.IsHovering(Frame.X+Frame.Wid-Frame.scrollwheelDimensions.Wid+Frame.scrollwheelOffset[2],
-            Frame.Y+Frame.scrollwheelOffset[2]-Frame.scrollwheelY*yCon,
-            Frame.scrollwheelDimensions.Wid,
-            Frame.Hei*Frame.Hei/Frame.yContent) then
-                love.graphics.setColor(Frame.scrollwheelHoveringColour)
-              else love.graphics.setColor(Frame.scrollwheelColour)
-            end
     
-    
-          --Right hand side Y-Axis scrollbar
-            if Frame.Hei*Frame.Hei/Frame.yContent < Frame.Hei then--Should be less than 1 not Frame.Hei
-              love.graphics.rectangle("fill",
-              Frame.X+Frame.Wid-Frame.scrollwheelDimensions.Wid+Frame.scrollwheelOffset[2],
-              Frame.Y+Frame.scrollwheelOffset[2]-Frame.scrollwheelY*yCon,
-              Frame.scrollwheelDimensions.Wid,
-              Frame.Hei*Frame.Hei/Frame.yContent,
-              Frame.SWRX,--Scroll wheel edge radius(X)
-              Frame.SWRY
-              )
-          
-            end
-
-
-            if Frame.isHoldingXScroll==true then
-            love.graphics.setColor(Frame.scrollwheelSelectedColour)
-            elseif CurFun.IsHovering(Frame.X+Frame.scrollwheelOffset[2]-Frame.scrollwheelX*xCon,
-            Frame.Y+Frame.Hei-Frame.scrollwheelDimensions.Hei+Frame.scrollwheelOffset[2],
-            Frame.Wid*Frame.Wid/Frame.xContent,
-            Frame.scrollwheelDimensions.Hei) then
-                love.graphics.setColor(Frame.scrollwheelHoveringColour)
-              else love.graphics.setColor(Frame.scrollwheelColour)
-            end
-      
-
-            --Bottom X-axis scrollbar
-            love.graphics.rectangle("fill",
-            Frame.X+Frame.scrollwheelOffset[2]-Frame.scrollwheelX*xCon,
-            Frame.Y+Frame.Hei-Frame.scrollwheelDimensions.Hei+Frame.scrollwheelOffset[2],
-            Frame.Wid*Frame.Wid/Frame.xContent,
-            Frame.scrollwheelDimensions.Hei,
-            Frame.SWRX,
-            Frame.SWRY)
-
-            
-
-          end
       love.graphics.setStencilTest()
       love.graphics.setColor(PR,PG,PB,PA)
 

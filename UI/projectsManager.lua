@@ -1,19 +1,8 @@
-
-
-
-function projectManager()
-
-    for i,v in ipairs(UI.Elements) do--Hides everything else
-        v:Disable()
-    end
-
-    --project manager main container/Frame
-    UI.Elements.PMCon:Enable()
-    UI.Elements.projectsList:Enable()
-
+local function projectManager()
+    suit.theme.color.normal = {bg={.3,.3,.3},fg={.5,.5,.5}}
+    if suit.Button("Create New Project",640-175,0,350,46) then  end
     for i,v in ipairs(love.filesystem.getDirectoryItems("Projects")) do
-        UI.Elements.projectsList.Contents[i] = UI.Elements.projectsList:newButton(0,i*100-100,640,100,{BGColour={.5,.5,.5},Text=v,textColour = {1,1,1},Font=mainFont})
-        UI.Elements.projectsList.Contents[i] = nil
+        if suit.Button(v,640-350,i*100,700,90).hit then  print("Hit") end
     end
 end
 

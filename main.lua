@@ -1,5 +1,5 @@
 local set = {mainSettings={},
-hiddenSettings={leftPanel="properties",leftPanelWidth=150,rightPanel="contents",rightPanelWidth=150}}
+hiddenSettings={properties="leftPanel",contents="rightPanel",leftPanelWidth=150,rightPanelWidth=150}}
 --Used if User doesnt have an engine settings file
 
 
@@ -7,7 +7,7 @@ hiddenSettings={leftPanel="properties",leftPanelWidth=150,rightPanel="contents",
 
 function love.load()
     binser = require("binser")
-    engineState = "projectsManager"--The gameState but for the engine itself
+    engineState = "projectsManager"--The gameState but for the engine itself. list of possible states:projectsManager,gameMaker
 
 
 
@@ -18,20 +18,27 @@ function love.load()
     --Binser.writeFile("engineSettingss.lua",engineSettings)
 
     --Binser.deserialize(engineSettings)[1]()
-
-    LUI = require("LUI")
+    print("i",love.filesystem.getIdentity())
+    suit = require("suit")
 
     UI = require("UI")--UI script contains functions which LUI execute
     UI.load()
     UI.projectManager()
 
-    engineSettings,e = love.filesystem.read("engineSettings.lua")
-    print(engineSettings,e)
-
-    if type(e) == "string" then
+    if love.filesystem.getInfo("engineSettings.lua") ~= nil then
         settingsFile = love.filesystem.newFile("engineSettings.lua")
+        settingsFile:open("r")
+        con = settingsFile:read()
+        engineSettings = binser.deserialize(con)
+        --settingsFile is the save file itself. engineSettings is the file converted to a table. It is used for effecincy
+    else
+
+        print(1)
+        settingsFile = love.filesystem.newFile("engineSettings.lua")
+        settingsFile:open("w")
         settingsFile:write(binser.serialize(set))
         settingsFile:close()
+        engineSettings = set
     end
 end
 
@@ -39,13 +46,8 @@ end
 
 function love.update(dt)
     settingsFile:write("")
+    UI.update()
 
-    if engineState == "projectsManager" then
-        for i,v in ipairs(UI.Elements.projectsList.Contents) do
-            if v:isClicked(1) then
-            end
-        end
-    end
 end
 
 
