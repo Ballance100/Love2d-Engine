@@ -1,7 +1,6 @@
 local set = {mainSettings={},
-hiddenSettings={properties="leftPanel",contents="rightPanel",leftPanelWidth=150,rightPanelWidth=150}}
+hiddenSettings={properties={x=0,y=0,wid=100,hei=320},contents={x=640-100,y=0,wid=100,hei=320}}}
 --Used if User doesnt have an engine settings file
-
 
 
 
@@ -9,8 +8,18 @@ function love.load()
     binser = require("binser")
     suit = require("suit")
     UI = require("UI")--UI script contains functions which LUI execute
-    Flux=require("Flux")
+    flux=require("Flux")
+    s = require("eZscale")
+
+    s.setup(1280,720,"floor")
+
     engineState = "projectsManager"--The gameState but for the engine itself. list of possible states:projectsManager,gameMaker
+
+
+    projectContents = {} --[[when a project is loaded this table will become the projects contents.
+    Everytime a change is made it will change projectSettings NOT the save file. When the project is saved it will serialize
+    projectContents using binser and then copy that to the save file ]]
+
 
     love.keyboard.setKeyRepeat (true)
 
@@ -21,18 +30,15 @@ function love.load()
     --Binser.writeFile("engineSettingss.lua",engineSettings)
 
     --Binser.deserialize(engineSettings)[1]()
-    print("i",love.filesystem.getIdentity())
+
     UI.load()
 
     if love.filesystem.getInfo("engineSettings.lua") ~= nil then
-        settingsFile = love.filesystem.newFile("engineSettings.lua")
-        settingsFile:open("r")
-        con = settingsFile:read()
-        engineSettings = binser.deserialize(con)
+        engineSettings = binser.deserialize(love.filesystem.read("data","engineSettings.lua"):getString())[1]
         --settingsFile is the save file itself. engineSettings is the file converted to a table. It is used for effecincy
+        print("hs",engineSettings.hiddenSettings.properties.x)
     else
 
-        print(1)
         settingsFile = love.filesystem.newFile("engineSettings.lua")
         settingsFile:open("w")
         settingsFile:write(binser.serialize(set))
@@ -44,7 +50,6 @@ end
 
 
 function love.update(dt)
-    settingsFile:write("")
     UI.update()
 
 end
@@ -61,4 +66,7 @@ end
 
 function love.keypressed(_,key)
     suit.keypressed(key)
+    if key == "f11" then if love.window.getFullscreen() then love.window.setFullscreen(false) else love.window.setFullscreen(true) end
+    mainFont = love.graphics.newFont("UI/JetBrains Mono.ttf",s.getX(20)) mainFont:setFilter("linear","nearest") 
+    love.graphics.setFont(mainFont) end 
 end
