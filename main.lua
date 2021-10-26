@@ -1,7 +1,7 @@
 local set = {mainSettings={},
 hiddenSettings={properties={x=0,y=0,wid=100,hei=320},contents={x=640-100,y=0,wid=100,hei=320}}}
 --Used if User doesnt have an engine settings file
-
+loveFrames = nil
 
 
 function love.load()
@@ -10,11 +10,12 @@ function love.load()
     UI = require("UI")--UI script contains functions which LUI execute
     flux=require("Flux")
     s = require("eZscale")
-
+    mainFont = love.graphics.newFont("UI/JetBrains Mono.ttf",20)
+    loveFrames = require("LoveFrames.loveframes")
     s.setup(1280,720,"floor")
-
+    loveFrames.SetActiveSkin("Blue")
     engineState = "projectsManager"--The gameState but for the engine itself. list of possible states:projectsManager,gameMaker
-
+    loveFrames.SetState("projectsManager")
 
     projectContents = {} --[[when a project is loaded this table will become the projects contents.
     Everytime a change is made it will change projectSettings NOT the save file. When the project is saved it will serialize
@@ -23,7 +24,7 @@ function love.load()
 
     love.keyboard.setKeyRepeat (true)
 
-    love.window.setMode(1280,720)--Sets the resolution
+    love.window.setMode(1280,720)--Sets the xxlresolution
 
     love.filesystem.createDirectory("Projects")--Creates Project folder if user doesnt already have one
 
@@ -50,23 +51,31 @@ end
 
 
 function love.update(dt)
+    suit.Label(200,200,100,100)
     UI.update()
-
+    love.graphics.rectangle("line",600,600,100,100)
 end
 
 
 function love.draw()
-UI.draw()
-
+    loveFrames.draw()
 end
 
 function love.textinput(t)
-    suit.textinput(t)
+    loveFrames.textinput(t)
 end
 
 function love.keypressed(_,key)
-    suit.keypressed(key)
+    loveFrames.keypressed(key)
     if key == "f11" then if love.window.getFullscreen() then love.window.setFullscreen(false) else love.window.setFullscreen(true) end
     mainFont = love.graphics.newFont("UI/JetBrains Mono.ttf",s.getX(20)) mainFont:setFilter("linear","nearest") 
     love.graphics.setFont(mainFont) end 
+end
+
+function love.mousepressed(x,y,mode)
+    loveFrames.mousepressed(x,y,mode)
+end
+
+function love.mousereleased(x,y,mode)
+    loveFrames.mousereleased(x,y,mode)
 end

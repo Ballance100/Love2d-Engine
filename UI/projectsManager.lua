@@ -4,6 +4,7 @@ input={text="Project Name"}
 
 local function projectManager()
     
+
     suit.theme.color.normal = {bg={.3,.3,.3},fg={.5,.5,.5}}
     suit.theme.color.active = {bg={.3,.7,.7},fg={0,0,0}}
 
