@@ -9,7 +9,7 @@ UI.update = require("UI.update")
 
 
 function UI.draw()
-    suit.draw()
+    slab.draw()
 end
 
 
