@@ -1,5 +1,7 @@
 function love.load()
 	camera = require("hump.camera")
+	binser = require("binser")
+	gameContents = binser.deserialize(love.filesystem.read("gameContents.lua"))
 end
 
 
@@ -19,9 +21,8 @@ end
 
 function love.draw()
 	local function runObjects(object)-- Acts on the objects that findObjects finds
-
+		if object.type == "" then   end
 	end
-
 	local function findObjects(Tab)
 		for i,object in ipairs(Tab) do
 			runObjects(object)

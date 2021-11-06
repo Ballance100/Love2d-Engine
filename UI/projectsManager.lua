@@ -27,7 +27,6 @@ local function projectManager()
 
 
         elseif state == "creatingProject" then
-        suit.Input(input,640-150,100,300,40)
         suit.Button("Create",640-150,155,140,30)
         suit.Button("Close",640,155,140,30)
         suit.Label("Create a New Project",s.X(640-175),s.Y(50),s.X(350),s.Y(40))

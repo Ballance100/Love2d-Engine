@@ -54,7 +54,6 @@ function love.update(dt)
     UI.update(dt)
     love.graphics.rectangle("line",600,600,100,100)
     slabDebug.StyleEditor()
-
 end
 
 
@@ -75,8 +74,8 @@ function love.keypressed(_,key)
     love.graphics.setFont(mainFont) end 
 end
 
-function love.mousepressed(x,y,mode)
+--[[function love.mousepressed(x,y,mode)
 end
 
 function love.mousereleased(x,y,mode)
-end
+end]]
