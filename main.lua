@@ -5,6 +5,7 @@ hiddenSettings={properties={x=0,y=0,wid=100,hei=320},contents={x=640-100,y=0,wid
 
 
 function love.load()
+    suit = require("suit")
     binser = require("binser")
     UI = require("UI")
     flux=require("Flux")
@@ -53,17 +54,22 @@ function love.update(dt)
     UI.update(dt)
     love.graphics.rectangle("line",600,600,100,100)
     slabDebug.StyleEditor()
+
 end
 
 
 function love.draw()
     slab.Draw()
+    suit.draw()
 end
 
 function love.textinput(t)
+    suit.textinput(t)
 end
 
 function love.keypressed(_,key)
+    suit.keypressed(key)
+
     if key == "f11" then if love.window.getFullscreen() then love.window.setFullscreen(false) else love.window.setFullscreen(true) end
     mainFont = love.graphics.newFont("UI/JetBrains Mono.ttf",s.getX(20)) mainFont:setFilter("linear","nearest") 
     love.graphics.setFont(mainFont) end 
